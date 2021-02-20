@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Post(models.Model):
@@ -15,3 +16,14 @@ class Post(models.Model):
 
 	def __str__(self):
 		return self.title
+
+	# django need to know how to find the location to the specific Post
+	# we don't need to provide success_url() in CreateView
+	#     if we define get_absolute_url
+	def get_absolute_url(self):
+		'''reverse() - return full URL to that route as a str,
+		redirect() - just redirect you to the specific route
+		'''
+		return reverse('blog:post-detail', kwargs={'pk': self.pk})
+
+

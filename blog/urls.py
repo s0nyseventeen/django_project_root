@@ -11,4 +11,5 @@ urlpatterns = [
 	# generic views
 	path('', views.PostListView.as_view(), name='blog-home'),
 	path('post/<int:pk>/', views.PostDetailView.as_view(), name='post-detail'),
+	path('post/create/', views.PostCreateView.as_view(), name='post-create'),
 ]
