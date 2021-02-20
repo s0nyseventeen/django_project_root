@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import generic
-from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 # LoginRequiredMixin with classes like decorators:@login_required() with func
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -33,6 +33,7 @@ class PostDetailView(generic.DetailView):
 	context_object_name = 'post_detail'
 
 
+# LoginRequiredMixin, UserPassesTestMixin must be to left in the inheritance
 class PostCreateView(LoginRequiredMixin, CreateView):
 	model = Post
 	fields = ['title', 'content']
@@ -61,13 +62,24 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 	def test_func(self):
 		'''getting exact post that we're currently updating'''
 		post = self.get_object()  # getting get_object() from UpdateView
+		# the same as: True if self.request.user == post.author else False
 		if self.request.user == post.author:  # check the post's author
 			return True
 		else:
 			return False
 
 
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+	model = Post
+	template_name = 'blog/post_delete.html'
+	success_url = '/'
 
+	def test_func(self):
+		post = self.get_object()
+		if self.request.user == post.author:  # check the post's author
+			return True
+		else:
+			return False
 
 
 
