@@ -9,27 +9,15 @@
 	    <div class="article-metadata">
 	      <a class="mr-2" href="#">{{ post_detail.author }}</a>
 	      <small class="text-muted">{{ post_detail.data_posted|date:"SHORT_DATE_FORMAT" }}, {{ post_detail.data_posted|time:"H:i" }}</small>
+	    {% if post_detail.author == user %}
+			<div>
+			  	<a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'blog:post-update' post_detail.id %}">Update</a>
+			  	<a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'blog:post-delete' post_detail.id %}">Delete</a>
+			</div>
+		{% endif %} 
 	    </div>
 	    <h2 class="article-title">{{ post_detail.title }}</h2>
 	    <p class="article-content">{{ post_detail.content }}</p>
 	  </div>
 	</article>
-	<!-- <form method="POST">
-			{% csrf_token %} -->
-			<!-- <fieldset class="form-group">
-				<legend class="border-bottom mb-4">Delete Post</legend>
-				<h4>Are you sure you want to delete {{ post.title }}?</h4>
-			</fieldset> -->
-			<div class="form-group">
-				<a class="btn btn-outline-danger" href="{% url 'blog:post-delete' post_detail.id %}">Delete</a>
-				<!-- <a class="btn btn-outline-secondary" href="{% url 'blog:post-detail' object.id %}">Cancel</a> -->
-			</div>
-		<!-- </form> -->
-	
 {% endblock content %}
-
-
-<div class="content-section">
-		
-
-		
