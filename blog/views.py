@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views import generic
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.urls import reverse_lazy
 # LoginRequiredMixin with classes like decorators:@login_required() with func
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
 from .models import Post
 
@@ -45,6 +45,29 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 		form.instance.author = self.request.user
 		# validation of the form
 		return super().form_valid(form)
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+	model = Post
+	fields = ['title', 'content']
+	template_name = 'blog/post_update.html'
+
+	def form_valid(self, form):
+		form.instance.author = self.request.user
+		return super().form_valid(form)
+
+	# test_func our user passes test to see if our user passes a certain test
+	    # condition
+	def test_func(self):
+		'''getting exact post that we're currently updating'''
+		post = self.get_object()  # getting get_object() from UpdateView
+		if self.request.user == post.author:  # check the post's author
+			return True
+		else:
+			return False
+
+
+
 
 
 
