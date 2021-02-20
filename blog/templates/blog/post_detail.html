@@ -7,7 +7,7 @@
 	 <img class="rounded-circle article-img" src="{{ post_detail.author.profile.image.url }}">
 	  <div class="media-body">
 	    <div class="article-metadata">
-	      <a class="mr-2" href="#">{{ post_detail.author }}</a>
+	      <a class="mr-2" href="{% url 'blog:user-posts' post_detail.author.username %}">{{ post_detail.author }}</a>
 	      <small class="text-muted">{{ post_detail.data_posted|date:"SHORT_DATE_FORMAT" }}, {{ post_detail.data_posted|time:"H:i" }}</small>
 	    {% if post_detail.author == user %}
 			<div>
