@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config  # to hide information
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -21,10 +22,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%0h^9*!)$nva)(&3@7ydm_8w@_i)w@1-urmj7evf23xxz(zy5d'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', cast=bool, default=True)  # default if we didn't find
+                                                    # DEBUG var in .env(need to add in .gitignore)
 
 ALLOWED_HOSTS = []
 
@@ -41,6 +43,7 @@ INSTALLED_APPS = [
 
     # addition
     'crispy_forms',
+    'storages',
 
     # own
     'blog.apps.BlogConfig',
@@ -140,5 +143,18 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'sonysevent@gmail.com'
-EMAIL_HOST_PASSWORD = '5247942st17'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+
+# Amazon bucket
+AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = config('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = config('AWS_STORAGE_BUCKET_NAME')
+# if a user uploads a file with a same name as a file that someone else 
+  # uploaded, we don't want those files to be overwritten
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_REGION_NAME = "us-east-2"
+AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
